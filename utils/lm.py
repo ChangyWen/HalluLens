@@ -15,10 +15,10 @@ NOTE:
         - openai_generate: using openai models
 '''
 ########################################################################################################
-def custom_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
+def custom_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, port=None):
 
     # raise NotImplementedError()
-    return call_vllm_api(prompt, model, temperature, top_p, max_tokens)
+    return call_vllm_api(prompt, model, temperature, top_p, max_tokens, port)
     # return openai_generate(prompt, model, temperature, top_p, max_tokens)
 
 def generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, port=None, i=0):
@@ -61,8 +61,8 @@ def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, por
         model=model,
         messages=[{"role": "user","content": prompt}],
         max_tokens=max_tokens,
-        temperature=temperature,
-        top_p=top_p
+        temperature=0.0,
+        top_p=1.0
     )
 
     return chat_completion.choices[0].message.content
@@ -78,8 +78,8 @@ def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
             model=model,
             messages=[{"role": "user", "content": prompt}],
             max_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p
+            temperature=0.0,
+            top_p=1.0
         )
 
         return chat_completion.choices[0].message.content
