@@ -18,7 +18,8 @@ NOTE:
 def custom_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
 
     # raise NotImplementedError()
-    return openai_generate(prompt, model, temperature, top_p, max_tokens)
+    return call_vllm_api(prompt, model, temperature, top_p, max_tokens)
+    # return openai_generate(prompt, model, temperature, top_p, max_tokens)
 
 def generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, port=None, i=0):
 
@@ -49,11 +50,11 @@ model_map = {   'meta-llama/Llama-3.1-405B-Instruct-FP8': {'name': 'llama3.1_405
 ########################################################################################################
 
 def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, port=None, i=0):
-    if port == None:
-        port = model_map[model]["server_urls"][i]
+    # if port == None:
+    #     port = model_map[model]["server_urls"][i]
 
     client = openai.OpenAI(
-        base_url=f"{port}",
+        base_url=f"http://localhost:8000/v1",
         api_key="NOT A REAL KEY",
     )
     chat_completion = client.chat.completions.create(
@@ -69,7 +70,10 @@ def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, por
 def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
     try:
         # Create a client object
-        client = openai.OpenAI(api_key=os.environ['XAI_API_KEY'], base_url="https://api.x.ai/v1")
+        client = openai.OpenAI(
+            api_key="NOT A REAL KEY",
+            base_url="http://localhost:8000/v1"
+        )
         chat_completion = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
