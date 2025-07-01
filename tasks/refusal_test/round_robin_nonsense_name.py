@@ -36,7 +36,8 @@ PRODUCT_TYPES = ["headphone", 'watch', 'camera', 'shoe', "game", "glasses",'spea
 HISTORICAL_EVENT_TYPES = ["war", "natural disaster", "scientific discovery", "sport event", "pandemic",] # 5
 
 MODELS = ["Llama-3.1-405B-Instruct", "Mistral-Nemo-Instruct-2407", "gpt-4o"]
-FULL_NAME_MODELS= ["meta-llama/Llama-3.1-405B-Instruct-FP8", "mistralai/Mistral-Nemo-Instruct-2407", "gpt-4o"]
+# FULL_NAME_MODELS= ["meta-llama/Llama-3.1-405B-Instruct-FP8", "mistralai/Mistral-Nemo-Instruct-2407", "gpt-4o"]
+FULL_NAME_MODELS = ["Qwen/Qwen3-4B", "Qwen/Qwen3-4B", "Qwen/Qwen3-4B"]
 
 DOMAIN_DICT = {
     "business": (CITIES, BUSINESS_TYPES, prompt_templates.BUSINESS_PROMPT),
