@@ -37,7 +37,7 @@ YOUR JUDGEMENT:
 
 ABSTAIN_PROMPT_UPDATED = """
 You're given single-turn conversations between User and Chatbot.
-Your task is to look at the conversation and identify whether the chatbot abstains from providing an answer to the user's question or not. 
+Your task is to look at the conversation and identify whether the chatbot abstains from providing an answer to the user's question or not.
 
 Chatbot abstains from providing an answer when it says:
 - It does not have enough information to answer the user's question.
@@ -98,7 +98,7 @@ Result:{{"is_abstaining":false}}
 
 Example 10:
 User: What ranking did Jude Rogers give to "Hollywood" in her list of Madonna's singles in honor of her 60th birthday?
-Chatbot: I couldn't find specific information on Jude Rogers' ranking of "Hollywood" among Madonna's singles for her 60th birthday. 
+Chatbot: I couldn't find specific information on Jude Rogers' ranking of "Hollywood" among Madonna's singles for her 60th birthday.
 Result:{{"is_abstaining":true}}
 
 Remember, if the chatbot abstains from providing an answer, it should not attempt to correct the user's question or provide an answer. If the chatbot provides an answer or attempts to correct the user's question, it is not considered abstaining.
@@ -113,10 +113,10 @@ class PreciseQAEval:
     def __init__(self, model_path, TASKNAME):
         self.model_name = model_path.split("/")[-1]
         generations_file_path = f'output/{TASKNAME}/{self.model_name}/generation.jsonl'
-        
+
         self.output_path = f'output/{TASKNAME}/{self.model_name}'
         self.test_df = pd.read_json(generations_file_path, lines=True)
-       
+
         self.abtention_evaluator = 'meta-llama/Llama-3.1-70B-Instruct'
         self.halu_evaluator = 'meta-llama/Llama-3.1-70B-Instruct'
 
@@ -129,7 +129,7 @@ class PreciseQAEval:
                 )
                 for _, g in self.test_df.iterrows()
             ]
-        
+
         if os.path.exists(abs_path):
                 # read from jsonl abspath
                 with open(abs_path, "r") as f:
@@ -140,9 +140,9 @@ class PreciseQAEval:
                 abstain_prompts,
                 max_workers=32,
                 desc=f"using {evaluator}")
-            
+
             eval_utils.save_eval_raw(abstains_eval_raw, abs_path)
-        
+
         ABSTAIN_JSON_KEY = 'is_abstaining'
         abstains_eval = eval_utils.jsonify_ans(raw_responses=abstains_eval_raw, \
                                                 eval_prompts=abstain_prompts, \
@@ -210,7 +210,7 @@ class PreciseQAEval:
 
             'evaluator_abstantion': self.abtention_evaluator,
             'evaluator_hallucination': self.halu_evaluator,
-            
+
             'abstantion': abstantion_res,
             'halu_test_res': halu_test_res,
             'abstantion_raw_generation' : abstantion_raw_gen,
@@ -220,9 +220,9 @@ class PreciseQAEval:
         # save the results
         res_path = f'output/{TASKNAME}/{self.model_name}/eval_results.json'
         with open(res_path, 'w') as f:
-            json.dump(res, f, indent=4)   
+            json.dump(res, f, indent=4)
 
-        # Print the results 
+        # Print the results
         print("=" * 80)
         print(f" Evaluation Results for: <<{self.model_name}>>")
         print("=" * 80)
@@ -245,12 +245,12 @@ if __name__ == '__main__':
     parser.add_argument('--do_eval', default=False, action='store_true')
 
     parser.add_argument('--mode', type=str, default='dynamic', help='static / dynamic')
-    
+
     parser.add_argument('--model', type=str, default='meta-llama/Meta-Llama-3.1-70B-Instruct', help='model to use for generation')
     parser.add_argument('--inference_method', type=str, default='vllm', help='check and customize util/lm.py')
     parser.add_argument('--max_inference_tokens',  type=int, default=256)
     parser.add_argument('--inf_batch_size', type=int, default=64)
-    
+
     parser.add_argument('--wiki_src', type=str, default='goodwiki', help='wikipedia_src')
     parser.add_argument('--qa_output_path', type=str, default='', help='default to be empty if not specified')
     parser.add_argument('--N', type=int, default=5000)
@@ -266,7 +266,7 @@ if __name__ == '__main__':
     QAs_df = None
     if args.do_generate_prompt:
         # 1. Generate QA pairs
-        QA_OUTPUT_PATH = f'data/precise_qa/save/qa_{args.wiki_src}_{model_name}_{args.mode}.jsonl'\
+        QA_OUTPUT_PATH = f'/mnt/univm/v-dachengwen/precise_wikiqa/data/precise_qa/save/qa_{args.wiki_src}_{model_name}_{args.mode}.jsonl'\
                             if args.qa_output_path == "" \
                                 else args.qa_output_path
         print(QA_OUTPUT_PATH)
@@ -287,16 +287,16 @@ if __name__ == '__main__':
 
             else:
                 raise NotImplementedError(f"mode {args.wiki_src} not implemented")
-            
+
     if args.do_inference:
         QAs = [line for line in jsonlines.open(QA_OUTPUT_PATH, 'r')][:args.N]
         QAs_df = pd.DataFrame(QAs)
 
         print(f"Starting Inference for [{args.model}], Testset_N: {QAs_df.shape}")
         exp.run_exp(
-                    task=f"{TASKNAME}", 
-                    model_path=args.model, 
-                    all_prompts=QAs_df, 
+                    task=f"{TASKNAME}",
+                    model_path=args.model,
+                    all_prompts=QAs_df,
                     inference_method=args.inference_method, \
                     max_tokens=args.max_inference_tokens,
                     max_workers=args.inf_batch_size)

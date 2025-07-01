@@ -15,4 +15,3 @@ data/precise_qa
 debug.ipynb
 
 output/*
-*.yaml

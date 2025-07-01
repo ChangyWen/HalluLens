@@ -61,13 +61,13 @@ class NonsenseMixedEval(NonsenseNameEval):
                 )
                 for gen_obj in generations
             ]
-        
+
         abstains_eval_raw = thread_map(
             lambda p: lm.generate(p, self.evaluator),
                     abstain_prompts,
                     max_workers=50,
                     desc=f"using {self.evaluator}")
-        
+
         if self.med_safety_filtered_model:
             for i, gen_obj in enumerate(generations):
                 if gen_obj['type'] == 'medicine':
@@ -82,7 +82,7 @@ class NonsenseMixedEval(NonsenseNameEval):
         abstains_eval_res = []
         for o in abstains_eval:
             abstains_eval_res.append(not o[JSON_KEY])
-        
+
         return abstains_eval_res
 
 
@@ -93,15 +93,15 @@ if __name__ == '__main__':
     parser.add_argument('--do_generate_prompt', default=False, action='store_true')
     parser.add_argument('--do_inference', default=False, action='store_true')
     parser.add_argument('--do_eval', default=False, action='store_true')
-    
+
     parser.add_argument('--name_overwrite', default=False, action='store_true')
     parser.add_argument('--infer_overwrite', default=False, action='store_true')
     parser.add_argument('--eval_overwrite', default=False, action='store_true')
 
-    parser.add_argument('--output_base_dir', type=str, default="output") # inference and eval output
-    parser.add_argument('--prompt_output_path', type=str, default="") # name output
+    parser.add_argument('--output_base_dir', type=str, default="/mnt/univm/v-dachengwen/nonsense_mixed_entities/output") # inference and eval output
+    parser.add_argument('--prompt_output_path', type=str, default="/mnt/univm/v-dachengwen/nonsense_mixed_entities") # name output
     parser.add_argument('--tested_model', type=str, default='meta-llama/Llama-3.1-405B-Instruct-FP8')
-    
+
     parser.add_argument('--N', type=int, default=2000)
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--inference_method', type=str, default='vllm')
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         if args.infer_overwrite:
             inference.remove_existing_files()
         inference.run_inference()
-            
+
     # run evaluation
     if args.do_eval:
         if 'gemma' in tested_model:

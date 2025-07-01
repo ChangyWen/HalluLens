@@ -59,7 +59,7 @@ def search_brave(query_string: str) -> Dict:
             raise SearchException('RATE_LIMITED')
         else:
             print(resp_json)
-            return {"query": query_string, "search_result": []} 
+            return {"query": query_string, "search_result": []}
     return clean_brave_response(resp.json(), top_k=10)
 
 

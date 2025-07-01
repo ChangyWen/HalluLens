@@ -79,10 +79,10 @@ if __name__ == '__main__':
     parser.add_argument('--max_workers', type=int, default=64)
     args = parser.parse_args()
 
-    # save all args details in  
+    # save all args details in
     base_path = os.path.dirname(os.path.abspath(__name__))
     model_name = args.model.split("/")[-1]
-    QA_OUTPUT_PATH = f"data/longwiki/save/longwiki_{model_name}.jsonl"
+    QA_OUTPUT_PATH = f"/mnt/univm/v-dachengwen/longwiki_main/data/longwiki/save/longwiki_{model_name}.jsonl"
 
     if args.do_generate_prompt:
         if os.path.exists(QA_OUTPUT_PATH):
@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 QAs = qa.longform_QA_generation_run_batch(
                         wiki_input_path=f"{base_path}/data/wiki_data/doc_goodwiki_h_score.jsonl",
                         N=args.N,
-                        q_generator=args.q_generator, # "meta-llama/Meta-Llama-3.1-405B-Instruct", 
+                        q_generator=args.q_generator, # "meta-llama/Meta-Llama-3.1-405B-Instruct",
                         output_path=QA_OUTPUT_PATH,
                         from_scratch=False
                     )
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
         print(f"Start Inference for {args.model} ", args.exp_mode, args.N)
 
-        exp.run_exp(task=f"{TASKNAME}-{args.exp_mode}", 
+        exp.run_exp(task=f"{TASKNAME}-{args.exp_mode}",
                     model_path=args.model,
                     all_prompts=all_prompts,
                     inference_method=args.inference_method,
@@ -125,11 +125,11 @@ if __name__ == '__main__':
         print(f"Running evaluation for {model_name};")
         print(f"** Refusal Evaluator: {args.abstain_evaluator}")
         print(f"** Claim Extractor: {args.claim_extractor}")
-        print(f"** Verifier: {args.verifier}") 
+        print(f"** Verifier: {args.verifier}")
         print("=========================================")
         run_eval(args)
-        
+
         print('\n***Evaluation completed')
-            
+
 
 

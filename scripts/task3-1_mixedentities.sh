@@ -10,10 +10,10 @@ MODELS=(
     # "meta-llama/Llama-3.1-405B-Instruct-FP8"
     # "meta-llama/Llama-3.3-70B-Instruct"
     # "meta-llama/Llama-3.1-70B-Instruct"
-    
+
 )
 
-# exp defualt = nonsense_all 
+# exp defualt = nonsense_all
 # Options: [nonsense_medicine nonsense_animal nonsense_plant nonsense_bacteria]
 
 for SEED in 0
@@ -23,8 +23,8 @@ do
         python -m tasks.refusal_test.nonsense_mixed_entities \
             --exp nonsense_all \
             --do_generate_prompt \
-            --do_inference \
-            --do_eval \
+            # --do_inference \
+            # --do_eval \
             --tested_model $MODEL \
             --N 10 \
             --seed $SEED

@@ -6,14 +6,14 @@
 # LICENSE file in the root directory of this source tree.
 
 # Set the environment variable for the API key
-export BRAVE_API_KEY="your brave api key" 
-export OPENAI_KEY="your openai key"
+# export BRAVE_API_KEY=""
+# export XAI_API_KEY=""
 
 MODELS=(
-    # "meta-llama/Llama-3.1-8B-Instruct"
+    "meta-llama/Llama-3.1-8B-Instruct"
     # "meta-llama/Llama-3.3-70B-Instruct"
     # "meta-llama/Llama-3.1-70B-Instruct"
-    # "meta-llama/Llama-3.1-405B-Instruct-FP8"    
+    # "meta-llama/Llama-3.1-405B-Instruct-FP8"
 )
 for SEED in 0
 do
@@ -21,8 +21,8 @@ do
     do
         python -m tasks.refusal_test.round_robin_nonsense_name \
         --do_generate_prompt \
-        --do_inference \
-        --do_eval \
+        # --do_inference \
+        # --do_eval \
         --output_base_dir "output/refusal_test" \
         --generate_model $MODELS \
         --BUSINESS_N 500 \
@@ -31,6 +31,7 @@ do
         --BUSINESS_NAME_NUM 5 \
         --EVENT_NAME_NUM 4 \
         --PRODUCT_NAME_NUM 3 \
+        --N 20 \
         --seed $SEED
     done
 done

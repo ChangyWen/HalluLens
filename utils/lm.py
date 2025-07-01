@@ -9,7 +9,7 @@ import os
 import openai
 
 '''
-NOTE: 
+NOTE:
     Available functions:
         - call_vllm_api: using vllm self-served models
         - openai_generate: using openai models
@@ -43,7 +43,7 @@ model_map = {   'meta-llama/Llama-3.1-405B-Instruct-FP8': {'name': 'llama3.1_405
                 "mistralai/Mistral-Nemo-Instruct-2407": {'name': 'Mistral-Nemo-Instruct-2407',
                                                         'server_urls': [f"http://{CUSTOM_SERVER}:8000/v1"],
                                                     },
-                                                    
+
             }
 ########################################################################################################
 
@@ -67,9 +67,7 @@ def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, por
 
 def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
     # Create a client object
-    client = openai.OpenAI(
-        api_key=os.environ["OPENAI_KEY"],
-    )
+    client = openai.OpenAI(api_key=os.environ['XAI_API_KEY'], base_url="https://api.x.ai/v1")
     chat_completion = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
