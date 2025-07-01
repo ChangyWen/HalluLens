@@ -26,8 +26,6 @@ for MODEL in "${MODELS[@]}"
 do
     python -m tasks.shortform.precise_wikiqa \
         --do_generate_prompt \
-        # --do_inference \
-        # --do_eval \
         --model $MODEL\
         --wiki_src goodwiki\
         --mode $MODE \

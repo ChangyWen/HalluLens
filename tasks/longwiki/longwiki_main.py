@@ -62,7 +62,7 @@ if __name__ == '__main__':
     parser.add_argument('--do_eval', default=False, action='store_true')
     parser.add_argument('--do_extract_only', default=False, action='store_true')
 
-    parser.add_argument('--model', type=str, default='meta-llama/Llama-3.1-405B-Instruct-FP8', help='model that is being "TESTED"')
+    parser.add_argument('--model', type=str, default='Qwen/Qwen3-32B', help='model that is being "TESTED"')
     parser.add_argument('--q_generator', type=str, default='Qwen/Qwen3-32B', help='model that is used for question generation')
 
     parser.add_argument('--claim_extractor', type=str, default='meta-llama/Llama-3.1-405B-Instruct-FP8', help='model that is used for claim extraction')
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     # save all args details in
     base_path = os.path.dirname(os.path.abspath(__name__))
     model_name = args.model.split("/")[-1]
-    QA_OUTPUT_PATH = f"/mnt/univm/v-dachengwen/longwiki_main/data/longwiki/save/longwiki_{model_name}.jsonl"
+    QA_OUTPUT_PATH = f"/mnt/unium/v-dachengwen/longwiki_main/data/longwiki/save/longwiki_{model_name}.jsonl"
 
     if args.do_generate_prompt:
         if os.path.exists(QA_OUTPUT_PATH):

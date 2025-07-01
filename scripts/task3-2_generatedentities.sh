@@ -21,8 +21,6 @@ do
     do
         python -m tasks.refusal_test.round_robin_nonsense_name \
         --do_generate_prompt \
-        # --do_inference \
-        # --do_eval \
         --output_base_dir "output/refusal_test" \
         --generate_model $MODELS \
         --BUSINESS_N 500 \

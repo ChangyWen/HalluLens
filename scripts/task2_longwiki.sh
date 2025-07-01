@@ -28,8 +28,6 @@ do
     CUDA_VISIBLE_DEVICES=$GPU python3 -m tasks.longwiki.longwiki_main \
         --exp_mode $EXP_MODE \
         --do_generate_prompt \
-        # --do_inference \
-        # --do_eval \
         --model $MODEL\
         --inference_method vllm \
         --N 5 \

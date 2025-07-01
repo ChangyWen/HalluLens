@@ -407,8 +407,8 @@ if __name__ == '__main__':
     parser.add_argument('--infer_overwrite', default=False, action='store_true')
     parser.add_argument('--eval_overwrite', default=False, action='store_true')
 
-    parser.add_argument('--output_base_dir', type=str, default="/mnt/univm/v-dachengwen/round_robin_nonsense_name/output", help='the output base dir of inference and eval results')
-    parser.add_argument('--prompt_output_path', type=str, default="/mnt/univm/v-dachengwen/round_robin_nonsense_name") # name output
+    parser.add_argument('--output_base_dir', type=str, default="/mnt/unium/v-dachengwen/round_robin_nonsense_name/output", help='the output base dir of inference and eval results')
+    parser.add_argument('--prompt_output_path', type=str, default="/mnt/unium/v-dachengwen/round_robin_nonsense_name") # name output
 
     parser.add_argument('--round_robin_pattern', type=str, default='average', help='average or mixtral')
 

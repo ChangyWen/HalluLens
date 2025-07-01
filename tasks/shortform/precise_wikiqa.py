@@ -266,7 +266,7 @@ if __name__ == '__main__':
     QAs_df = None
     if args.do_generate_prompt:
         # 1. Generate QA pairs
-        QA_OUTPUT_PATH = f'/mnt/univm/v-dachengwen/precise_wikiqa/data/precise_qa/save/qa_{args.wiki_src}_{model_name}_{args.mode}.jsonl'\
+        QA_OUTPUT_PATH = f'/mnt/unium/v-dachengwen/precise_wikiqa/data/precise_qa/save/qa_{args.wiki_src}_{model_name}_{args.mode}.jsonl'\
                             if args.qa_output_path == "" \
                                 else args.qa_output_path
         print(QA_OUTPUT_PATH)

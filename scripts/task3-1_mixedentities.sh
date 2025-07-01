@@ -23,8 +23,6 @@ do
         python -m tasks.refusal_test.nonsense_mixed_entities \
             --exp nonsense_all \
             --do_generate_prompt \
-            # --do_inference \
-            # --do_eval \
             --tested_model $MODEL \
             --N 10 \
             --seed $SEED

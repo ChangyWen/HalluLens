@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Dict
 
 import pandas as pd
-from tqdm import tqdm   
+from tqdm import tqdm
 
 from tasks.longwiki import prompt_templates
 from segtok.segmenter import split_single
@@ -55,7 +55,7 @@ class Generation:
     def __eq__(self, other) -> bool:
         return self.generation == other.generation and self.prompt == other.prompt
 
-encoding = AutoTokenizer.from_pretrained('meta-llama/Llama-3.1-405B-Instruct-FP8', trust_remote_code=True)
+encoding = AutoTokenizer.from_pretrained('Qwen/Qwen3-32B', trust_remote_code=True)
 
 class FactHalu:
     def __init__(
@@ -71,7 +71,7 @@ class FactHalu:
             db_path="/data/wiki_data/.cache/enwiki-20230401.db",
             args=None
         ):
-        
+
         self.args = args
         self.generations_file_path = generations_file_path
         self.output_csv = output_csv
@@ -92,9 +92,9 @@ class FactHalu:
         self.embedded_cache_path =f"{self.CACHE_BASE_PATH}/embedding/embed_cache_all.pkl"
         if not os.path.exists(f"{self.CACHE_BASE_PATH}/embedding/"):
             os.makedirs(f"{self.CACHE_BASE_PATH}/embedding/")
-        
+
         print("Cache path:", self.embedded_cache_path)
-    
+
     def prepare_path(self):
         self.refusal_path = str(self.output_csv).replace(".csv", "_abstain.jsonl")
         self.extracted_claims_path = str(self.output_csv).replace(".csv", "_all_claims.jsonl")
@@ -112,9 +112,9 @@ class FactHalu:
             final_results_df = pd.read_csv(self.output_csv)
             final_results_df = utils.print_all_metrics(final_results_df, k=self.k)
             return
-        
+
         now = time.time()
-    
+
     ### [[STEP #0]] Load generations
         self.load_generations()
 
@@ -138,7 +138,7 @@ class FactHalu:
         all_verification_responses = self.verify_claims(all_claims)
 
         for claim, verification_response in zip(all_claims, all_verification_responses):
-            claim.is_supported = verification_response["is_supported"]                
+            claim.is_supported = verification_response["is_supported"]
 
     ### [[[ STEP #4]]] Calculate metrics: precision, recall@k, f1, response ratio
         print(f"[[Step 4]] Calculating metrics")
@@ -208,17 +208,17 @@ class FactHalu:
         abstains_eval_raw = utils.read_eval_raw(refusal_path)
         if len(abstains_eval_raw) == len(abstain_prompts):
             print("Read from cache {}".format(refusal_path))
-        else:   
+        else:
             abstains_eval_raw = utils.model_eval_step(self.refusal_evaluator, abstain_prompts, max_token=128, batch_size=64)
             utils.save_eval_raw(abstains_eval_raw, output_file=refusal_path)
-        
+
         abstains_eval = utils.jsonify_ans(
             raw_responses=abstains_eval_raw,
             eval_prompts=abstain_prompts,
             evaluator=self.refusal_evaluator,
             key="is_knowledgeable"
         )
-        
+
         for generation, abstain in zip(self.generations, abstains_eval):
             generation.abstain = not abstain["is_knowledgeable"]
 
@@ -252,7 +252,7 @@ class FactHalu:
                 if i % 500 == 0: print(f"Processed {i+100} sentences. out of {len(all_sentences)}")
 
             utils.save_eval_raw(all_claim_extractions, output_file=extracted_claims_path)
-        
+
         print("***** [2-2] Parsing extracted claims")
         all_claims = []
         deduplicate = defaultdict(set)
@@ -267,7 +267,7 @@ class FactHalu:
                 continue
 
             parsed_claim_extraction = utils.parse_claim_extraction(claim_extraction, self.claim_extractor)
-            
+
             sentence_claims = []
             for claim_text in parsed_claim_extraction:
                 if (
@@ -280,7 +280,7 @@ class FactHalu:
                                     refernce=sentence.generation.reference,\
                                     topic=sentence.generation.topic,\
                                     question=sentence.generation.prompt
-                                ) 
+                                )
                     sentence_claims.append(claim)
                     all_claims.append(claim)
 
@@ -332,10 +332,10 @@ class FactHalu:
         assert len(claim_verification_res) == len(all_claims)
         # 3. post process the verification result
         calim_verification_results = utils.jsonify_ans(raw_responses=claim_verification_res, \
-                                                            eval_prompts=verification_prompts, 
+                                                            eval_prompts=verification_prompts,
                                                             evaluator=self.verifier,\
                                                             key="is_supported")
-                
+
         return calim_verification_results
 
 def make_claim_extraction_prompts(generation: Generation, claim_extractor="meta-llama/Llama-3.1-405B-Instruct-FP8"):
@@ -374,27 +374,27 @@ def make_claim_extraction_prompts(generation: Generation, claim_extractor="meta-
             prompt_text = prompt_templates.EXTRACT_CLAIMS_TEMPLATE.format(
                 snippet=snippet, sentence=sentence
             )
-            # check token 
+            # check token
             prompt_len = len(encoding.encode(prompt_text))
             if prompt_len > 3500:
                 context1 = " ".join(sentences_text[max(0, i - 2) : i])
                 snippet = f"{context1.strip()} {sentence.strip()} {context2.strip()}".strip()
-                
+
                 prompt_text = prompt_templates.EXTRACT_CLAIMS_SHORT_TEMPLATE.format(
                 snippet=snippet, sentence=sentence
-                )   
-                
+                )
+
                 if len(encoding.encode(prompt_text)) > 3500:
-                    
+
                     prompt_text = prompt_templates.EXTRACT_CLAIMS_EXTREME_SHORT_TEMPLATE.format(
                         snippet=snippet, sentence=sentence
-                    ) 
-                    
+                    )
+
                     if len(encoding.encode(prompt_text)) > 3500:
                         prompt_text = prompt_templates.EXTRACT_CLAIMS_EXTREME_EXTREME_SHORT_TEMPLATE.format(
                             snippet=snippet, sentence=sentence
                         )
-                    
+
                 assert len(encoding.encode(prompt_text)) <= 3500
 
             sentences.append(
@@ -404,6 +404,6 @@ def make_claim_extraction_prompts(generation: Generation, claim_extractor="meta-
             )
     else:
         raise ValueError(f"Invalid claim_extractor: {claim_extractor}")
-    
+
     generation.sentences = sentences
     return sentences
