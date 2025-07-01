@@ -10,6 +10,7 @@ import argparse
 import subprocess
 # from datasets import load_dataset
 from data.wiki_data.wikidata import wikiData
+import zipfile
 ################################################################################
 WIKI_DATA_PATH = f"data/wiki_data"
 REFUSAL_PATH = "data/nonexistent_refusal"
@@ -53,7 +54,9 @@ def download_medicine():
             "curl", "-L", "-o", f"{REFUSAL_PATH}/medicine_dataset.zip",
             "https://www.kaggle.com/api/v1/datasets/download/shudhanshusingh/250k-medicines-usage-side-effects-and-substitutes"
         ])
-        subprocess.run(["unzip", f"{REFUSAL_PATH}/medicine_dataset.zip", "-d", f"{REFUSAL_PATH}"])
+        with zipfile.ZipFile(f"{REFUSAL_PATH}/medicine_dataset.zip", 'r') as zip_ref:
+            zip_ref.extractall(f"{REFUSAL_PATH}")
+        # subprocess.run(["unzip", f"{REFUSAL_PATH}/medicine_dataset.zip", "-d", f"{REFUSAL_PATH}"])
         os.remove(f"{REFUSAL_PATH}/medicine_dataset.zip")
 
 def download_itis_taxonomy():
