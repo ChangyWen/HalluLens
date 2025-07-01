@@ -17,13 +17,14 @@ NOTE:
 ########################################################################################################
 def custom_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
 
-    raise NotImplementedError()
+    # raise NotImplementedError()
+    return openai_generate(prompt, model, temperature, top_p, max_tokens)
 
 def generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, port=None, i=0):
 
     # TODO: You need to use your own inference method
-    # return custom_api(prompt, model, temperature, top_p, max_tokens, port)
-    return call_vllm_api(prompt, model, temperature, top_p, max_tokens, port, i)
+    return custom_api(prompt, model, temperature, top_p, max_tokens, port)
+    # return call_vllm_api(prompt, model, temperature, top_p, max_tokens, port, i)
 
 CUSTOM_SERVER = "0.0.0.0" # you may need to change the port
 
@@ -66,14 +67,18 @@ def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, por
     return chat_completion.choices[0].message.content
 
 def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
-    # Create a client object
-    client = openai.OpenAI(api_key=os.environ['XAI_API_KEY'], base_url="https://api.x.ai/v1")
-    chat_completion = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_tokens,
-        temperature=temperature,
-        top_p=top_p
-    )
+    try:
+        # Create a client object
+        client = openai.OpenAI(api_key=os.environ['XAI_API_KEY'], base_url="https://api.x.ai/v1")
+        chat_completion = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p
+        )
 
-    return chat_completion.choices[0].message.content
+        return chat_completion.choices[0].message.content
+    except Exception as e:
+        print(e)
+        return ""

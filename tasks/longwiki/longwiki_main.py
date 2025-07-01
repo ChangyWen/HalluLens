@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 QAs = qa.longform_QA_generation_run_batch(
                         wiki_input_path=f"{base_path}/data/wiki_data/doc_goodwiki_h_score.jsonl",
                         N=args.N,
-                        q_generator=args.q_generator, # "meta-llama/Meta-Llama-3.1-405B-Instruct",
+                        q_generator="meta-llama/Llama-3.1-70B-Instruct", # "meta-llama/Meta-Llama-3.1-405B-Instruct",
                         output_path=QA_OUTPUT_PATH,
                         from_scratch=False
                     )

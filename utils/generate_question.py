@@ -21,7 +21,7 @@ from utils.qa_utils import split_doc, sentence_tokenize
     NOTE:
         You need to modify generate functions here to yours.
 """
-# 
+#
 
 PRECISE_Q_GENERATION_PROMPT = """I would like you to act as a question generator. I will provide reference and you will generate a factual knowledge based question about "{wiki_title}" based on the reference. The specific requirements are as follows:
 
@@ -38,8 +38,8 @@ Reference:
 Please reply with the question only without any explanation or additional information:
 """
 
-PRECISE_ANSWERABILITY_PROMPT = """I would like you to judge question's answerability and answer the question. 
-I will provide a question and reference document, and you will judge whether the question is fully answerable based only on the reference document, i.e., whether the answer is included in the reference. 
+PRECISE_ANSWERABILITY_PROMPT = """I would like you to judge question's answerability and answer the question.
+I will provide a question and reference document, and you will judge whether the question is fully answerable based only on the reference document, i.e., whether the answer is included in the reference.
 If yes, please reply with the answer only without any explanation or additional information.
 If no, please reply with "unanswerable" only.
 
@@ -64,14 +64,14 @@ Question 5. What are the characteristics and motivations of Datuk Meringgih in t
 Reference:
 {wiki_document}
 
-Please reply with the question only without any explanation or additional information. 
+Please reply with the question only without any explanation or additional information.
 Remember requirements. Ask only one question. Keep it concise.
 If you cannot generate an essay question, please reply with "[NO QUESTION]".
-Question: 
+Question:
 """
 
 LONGFORM_ANSWERABILITY_PROMPT = """I would like you to judge question's answerability based on the reference document.
-I will provide a question and reference document, and you will judge whether the question is fully answerable based only on the reference document, i.e., whether the answer is included in the reference. 
+I will provide a question and reference document, and you will judge whether the question is fully answerable based only on the reference document, i.e., whether the answer is included in the reference.
 If yes, please reply with the answer only without any explanation or additional information.
 If no, please reply with "unanswerable" only.
 
@@ -99,21 +99,21 @@ class WikiQA:
     def generate_QA_with_doc(self, title, document, language='en', min_len=500, max_len=750, only_one_doc=False):
         sections = split_doc(document, language, self.encoding, keep_end=False, keep_colon=False, MIN_LEN=min_len, MAX_LEN=max_len)
         if len(sections) > 2:
-            sections = sections[:-1] 
+            sections = sections[:-1]
             # last section usually is the reference list
 
         paired_rqas = []
 
         if only_one_doc:
             sections = random.sample(sections, 1)
-            
+
         for section in sections:
             fail_time = 0
             while fail_time < self.Q_FAIL_TIME:
                 q = self.generate_question_with_doc(title, section, language)
                 if q == -1: return [] # when the q generation failed
                 a = self.generate_answerability(q, section, language)
-                
+
                 if a == -1:
                     fail_time += 1
                     # if fail_time == 3: assert False
@@ -127,20 +127,20 @@ class WikiQA:
         return paired_rqas
 
     def generate_question_with_doc(self, title, document):
-        instruct = self.Q_GENERATION_PROMPT 
+        instruct = self.Q_GENERATION_PROMPT
         prompt = instruct.format(wiki_title=title, wiki_document=document.strip())
         reply = lm.generate(prompt, self.q_generator, temperature=0.7, top_p=0.9)
         if reply.lower().startswith("unfortunately"):
             return -1
-        
+
         return reply.strip()
-    
+
     def generate_answerability(self, q, doc):
         instruct = self.ANSWERABILITY_PROMPT
         prompt = instruct.format(ref_document=doc, question=q)
         reply = lm.generate(prompt, self.q_generator, temperature=0.3).strip()
         return self.justify_answerability(reply)
-    
+
     def justify_answerability(self, reply):
         if reply.strip().lower() == "unanswerable"\
                 or "unanswerable" in reply\
@@ -166,7 +166,7 @@ class WikiQA:
                     out_lines = list(f)
         print("Already having questions N=", len(out_lines))
         return out_lines
- 
+
     def per_bin_generation_batch(self, wiki_data, output_path, N):
         QAs = []
 
@@ -186,20 +186,20 @@ class WikiQA:
 
             # select section from the document
             sections = split_doc(document, "en", self.encoding, keep_end=False, keep_colon=False, MIN_LEN=self.min_len, MAX_LEN=self.max_len)
-            if len(sections) > 2: sections = sections[:-1] 
+            if len(sections) > 2: sections = sections[:-1]
             section = random.sample(sections, 1)[0] # always selecting one section
             obj['reference'] = section
 
             # make prompt
-            instruct = self.Q_GENERATION_PROMPT 
+            instruct = self.Q_GENERATION_PROMPT
             prompt = instruct.format(wiki_title=title, wiki_document=section.strip())
-            
+
             # append prompt and data
             Q_MAKING_PROMPTS.append(prompt)
             all_data.append(obj)
 
         print("Generating questions...")
-        results = thread_map(lambda p: lm.call_vllm_api(p, self.q_generator, temperature=0.7, top_p=0.9),
+        results = thread_map(lambda p: lm.openai_generate(p, self.q_generator, temperature=0.7, top_p=0.9),
                                 Q_MAKING_PROMPTS,
                                 max_workers=50,
                                 desc=f"using {self.q_generator}")
@@ -234,18 +234,18 @@ class WikiQA:
                 print("Finished. Filter out {} unanswerable questions.".format(filter_count))
                 break
         print(filter_count)
-            
+
         return QAs
 
 ############################################################################################################
 def precise_QA_generation_run_batch(
         wiki_input_path,
         N=5000,
-        q_generator="meta-llama/Meta-Llama-3.1-70B-Instruct",
+        q_generator="meta-llama/Llama-3.1-70B-Instruct",
         output_path="",
         from_scratch=False,
     ):
-    
+
     print("Wiki Source ={}...".format(wiki_input_path))
     qa = WikiQA(q_generator, task='precise')
 
@@ -262,7 +262,7 @@ def precise_QA_generation_run_batch(
     for bin in range(low_level,high_level):
 
         level_wiki = wiki_data_all[wiki_data_all['h_score_cat'] == bin]
-        level_wiki = level_wiki.sample(frac=1) 
+        level_wiki = level_wiki.sample(frac=1)
         wiki_data = level_wiki.to_dict(orient='records')
         random.shuffle(wiki_data)
 
@@ -291,7 +291,7 @@ def longform_QA_generation_run_batch(
     if len(QAs) >= N:
         print("Already having questions N={}...".format(len(QAs)))
         return QAs[:N]
-    
+
     wiki_data_all = pd.read_json(wiki_input_path, orient='records', lines=True)
     with open("data/wiki_data/doc_goodwiki_not_exist_titles.txt", 'r') as f:
         not_exist =[f.strip() for f in f.readlines()]
@@ -303,7 +303,7 @@ def longform_QA_generation_run_batch(
 
     for bin in range(low_level,high_level):
         level_wiki = wiki_data_all[wiki_data_all['h_score_cat'] == bin]
-        level_wiki = level_wiki.sample(frac=1) 
+        level_wiki = level_wiki.sample(frac=1)
         wiki_data = level_wiki.to_dict(orient='records')
         random.shuffle(wiki_data)
         wiki_data = wiki_data[:per_level_count+5] #todo 100
@@ -325,6 +325,6 @@ if __name__ == "__main__":
     parser.add_argument("--min_len", type=int, default=200)
     parser.add_argument("--max_len", type=int, default=400)
     args = parser.parse_args()
-    
+
 
 
