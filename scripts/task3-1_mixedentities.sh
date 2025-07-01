@@ -5,7 +5,6 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-export CUDA_VISIBLE_DEVICES=6,7
 MODELS=(
     "meta-llama/Llama-3.1-8B-Instruct"
     # "meta-llama/Llama-3.1-405B-Instruct-FP8"
@@ -21,7 +20,7 @@ for SEED in 0
 do
     for MODEL in "${MODELS[@]}"
     do
-        CUDA_VISIBLE_DEVICES=6,7 python -m tasks.refusal_test.nonsense_mixed_entities \
+        CUDA_VISIBLE_DEVICES=4,5,6,7 python -m tasks.refusal_test.nonsense_mixed_entities \
             --exp nonsense_all \
             --do_generate_prompt \
             --tested_model $MODEL \
