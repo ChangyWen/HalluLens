@@ -29,7 +29,6 @@ do
         --BUSINESS_NAME_NUM 5 \
         --EVENT_NAME_NUM 4 \
         --PRODUCT_NAME_NUM 3 \
-        --N 20 \
         --seed $SEED
     done
 done
