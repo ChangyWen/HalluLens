@@ -19,10 +19,10 @@ for SEED in 0
 do
     for MODEL in "${MODELS[@]}"
     do
-        CUDA_VISIBLE_DEVICES=4,5,6,7 python -m tasks.refusal_test.round_robin_nonsense_name \
+        python -m tasks.refusal_test.round_robin_nonsense_name \
         --do_generate_prompt \
         --output_base_dir "output/refusal_test" \
-        --generate_model $MODELS \
+        --generate_model $MODEL \
         --BUSINESS_N 500 \
         --EVENT_N 400 \
         --PRODUCT_N 100 \
