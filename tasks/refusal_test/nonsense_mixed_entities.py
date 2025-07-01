@@ -98,8 +98,8 @@ if __name__ == '__main__':
     parser.add_argument('--infer_overwrite', default=False, action='store_true')
     parser.add_argument('--eval_overwrite', default=False, action='store_true')
 
-    parser.add_argument('--output_base_dir', type=str, default="/mnt/unium/v-dachengwen/nonsense_mixed_entities/output") # inference and eval output
-    parser.add_argument('--prompt_output_path', type=str, default="/mnt/unium/v-dachengwen/nonsense_mixed_entities") # name output
+    parser.add_argument('--output_base_dir', type=str, default="/mnt/unium/v-dachengwen/hallulens/nonsense_mixed_entities/output") # inference and eval output
+    parser.add_argument('--prompt_output_path', type=str, default="/mnt/unium/v-dachengwen/hallulens/nonsense_mixed_entities") # name output
     parser.add_argument('--tested_model', type=str, default='meta-llama/Llama-3.1-405B-Instruct-FP8')
 
     parser.add_argument('--N', type=int, default=2000)

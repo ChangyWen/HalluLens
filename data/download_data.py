@@ -38,7 +38,7 @@ def longwiki_eval_data():
         """
         ret_code = subprocess.run(command, shell=True)
         check_status(ret_code, "data/wiki_data/.cache")
-        
+
         print("Finished making title db | Path: ", f"{WIKI_DATA_PATH}/title_db.jsonl")
         print("-"*50)
 
@@ -68,7 +68,7 @@ def download_itis_taxonomy():
             "https://www.itis.gov/downloads/itisMySQLTables.tar.gz"
         ])
         check_status(ret_code, f"{REFUSAL_PATH}/itis_animals.tar.gz")
-        
+
     # Step 2: Unzip the itis_animals.tar.gz
     print("Extracting files...")
     os.makedirs(f"{REFUSAL_PATH}/extracted", exist_ok=True)
@@ -85,11 +85,11 @@ def download_itis_taxonomy():
     # Step 4: Remove the extracted folder
     print("Cleaning up...")
     subprocess.run(["rm", "-rf", f"{REFUSAL_PATH}/extracted/"])
-    
+
     os.remove(f"{REFUSAL_PATH}/itis_animals.tar.gz")
     print("Process completed.")
 
-    
+
 def check_status(ret_code, path=""):
     if ret_code.returncode != 0:
         print("Download {} ... [Failed]".format(path))
@@ -101,22 +101,22 @@ if __name__ == '__main__':
     parser.add_argument('--data_base_dir',
                         type=str,
                         default="./data/")
-    
+
     parser.add_argument("--all",
                         action="store_true",
                         default=False,
                         help="Download all datasets")
-    
+
     parser.add_argument("--precisewikiqa",
                         action="store_true",
                         default=False,
                         help="Prepare Wiki Data for Task 1 and Task 2")
-    
+
     parser.add_argument("--longwiki",
                         action="store_true",
                         default=False,
                         help="Prepare Wikipedia dump for Task 2 Evaluation")
-    
+
     parser.add_argument("--nonexistent_refusal",
                         action="store_true",
                         default=False,
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             os.makedirs(WIKI_DATA_PATH)
         wiki_data = wikiData()
         wiki_data.run()
-    
+
     ## Prepare Wikipedia dump for Task 2 Evalution:
     if args.all or args.longwiki:
         longwiki_eval_data()
