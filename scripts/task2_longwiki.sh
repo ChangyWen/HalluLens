@@ -34,5 +34,5 @@ do
         --inference_method vllm \
         --N 5 \
         --db_path "/private/home/yejinbang/facthalu/data/wiki_data/.cache/enwiki-20230401.db" \
-        --q_generator meta-llama/Llama-3.1-8B-Instruct    #TODO!!
+        --q_generator Qwen/Qwen3-32B
 done

@@ -241,7 +241,7 @@ class WikiQA:
 def precise_QA_generation_run_batch(
         wiki_input_path,
         N=5000,
-        q_generator="meta-llama/Llama-3.1-70B-Instruct",
+        q_generator="Qwen/Qwen3-32B",
         output_path="",
         from_scratch=False,
     ):
@@ -275,7 +275,7 @@ def precise_QA_generation_run_batch(
 def longform_QA_generation_run_batch(
         wiki_input_path,
         N=250,
-        q_generator="meta-llama/Llama-3.1-70B-Instruct",
+        q_generator="Qwen/Qwen3-32B",
         output_path="",
         from_scratch=False,
         low_level=5,

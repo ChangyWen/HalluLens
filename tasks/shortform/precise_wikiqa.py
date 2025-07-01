@@ -281,7 +281,7 @@ if __name__ == '__main__':
                 QAs = precise_qa.precise_QA_generation_run_batch(
                     wiki_input_path=f"{base_path}/data/wiki_data/doc_goodwiki_h_score.jsonl",
                     N=args.N,
-                    q_generator="meta-llama/Llama-3.1-70B-Instruct",
+                    q_generator="Qwen/Qwen3-32B",
                     output_path=QA_OUTPUT_PATH)
                 print(f"Generated {len(QAs)} QA pairs")
 
