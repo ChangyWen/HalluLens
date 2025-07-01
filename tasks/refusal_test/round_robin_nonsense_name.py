@@ -111,7 +111,7 @@ class NonsenseNameGeneration:
         if type_num * dNAME_NUM * 0.95 < dN:
             self.NAME_NUMS[domain] = math.ceil(dN/0.95/type_num/1) # sample more to make sure enough after web check
         random.seed(self.seed)
-        types = random.sample(types, type_num)
+        types = random.sample(types, min(type_num, len(types)))
         print('sampled', len(types), 'types')
         return sorted(types)
 
