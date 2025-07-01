@@ -5,6 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+export CUDA_VISIBLE_DEVICES=6,7
 MODELS=(
     "meta-llama/Llama-3.1-8B-Instruct"
     # "meta-llama/Llama-3.1-70B-Instruct"
@@ -24,7 +25,7 @@ MODELS=(
 MODE=dynamic
 for MODEL in "${MODELS[@]}"
 do
-    python -m tasks.shortform.precise_wikiqa \
+    CUDA_VISIBLE_DEVICES=6,7 python -m tasks.shortform.precise_wikiqa \
         --do_generate_prompt \
         --model $MODEL\
         --wiki_src goodwiki\
