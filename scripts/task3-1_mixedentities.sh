@@ -24,7 +24,7 @@ do
             --exp nonsense_all \
             --do_generate_prompt \
             --tested_model $MODEL \
-            --N 10 \
+            --N 200 \
             --seed $SEED
     done
 done

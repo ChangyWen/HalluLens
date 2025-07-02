@@ -65,6 +65,10 @@ def call_vllm_api(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512, por
         top_p=1.0
     )
 
+    print(f"calling call_vllm_api with model {model}")
+    print(f"prompt: {prompt}")
+    print(f"response: {chat_completion.choices[0].message.content}")
+
     return chat_completion.choices[0].message.content
 
 def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
@@ -81,6 +85,10 @@ def openai_generate(prompt, model, temperature=0.0, top_p=1.0, max_tokens=512):
             temperature=0.0,
             top_p=1.0
         )
+
+        print(f"calling openai_generate with model {model}")
+        print(f"prompt: {prompt}")
+        print(f"response: {chat_completion.choices[0].message.content}")
 
         return chat_completion.choices[0].message.content
     except Exception as e:
