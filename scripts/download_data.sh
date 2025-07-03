@@ -8,6 +8,6 @@
 # python -m data.download_data --all
 
 # if you want to download specific data, you can use the following command
-# python -m data.download_data --precisewikiqa
+python -m data.download_data --precisewikiqa
 # python -m data.download_data --longwiki
-python -m data.download_data --nonexistent_refusal
+# python -m data.download_data --nonexistent_refusal
