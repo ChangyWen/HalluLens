@@ -30,5 +30,5 @@ do
         --wiki_src goodwiki\
         --mode $MODE \
         --inference_method vllm \
-        --N 500
+        --N 200
 done
