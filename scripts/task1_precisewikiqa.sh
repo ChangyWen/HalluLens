@@ -24,11 +24,11 @@ MODELS=(
 MODE=dynamic
 for MODEL in "${MODELS[@]}"
 do
-    CUDA_VISIBLE_DEVICES=4,5,6,7 python -m tasks.shortform.precise_wikiqa \
+    python -m tasks.shortform.precise_wikiqa \
         --do_generate_prompt \
         --model $MODEL\
         --wiki_src goodwiki\
         --mode $MODE \
         --inference_method vllm \
-        --N 1
+        --N 400
 done
